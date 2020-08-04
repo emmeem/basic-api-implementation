@@ -27,5 +27,9 @@ public class RsController {
     rsList.add(rsEvent);
   }
 
-  
+  @PutMapping()
+  public void changeOneRsEvent(@PathVariable int index, @RequestBody String rsEvent){
+    rsList.set(index, rsEvent);
+  }
+
 }

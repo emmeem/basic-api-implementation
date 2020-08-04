@@ -44,6 +44,12 @@ class RsListApplicationTests {
     }
 
     @Test
+    void shouldChangeRsEvent() throws Exception {
+        mockMvc.perform(put("/rs/1").content("修改事件"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void contextLoads() {
     }
 
