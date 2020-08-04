@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,6 +35,12 @@ class RsListApplicationTests {
         mockMvc.perform(get("/rs/list?start=1&end=3"))
                 .andExpect(content().string("[第一条事件, 第二条事件, 第三条事件]"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldAddOneRsEvent() throws Exception {
+        mockMvc.perform(post("/rs/event").content("第四条事件"))
+               .andExpect(status().isOk());
     }
 
     @Test
