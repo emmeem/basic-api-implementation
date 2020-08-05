@@ -71,7 +71,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void gendershouldNotNull() throws Exception {
+    void gendershouldNotEmpty() throws Exception {
         User user = new User("genderliao", "", 19, "gdliao@a.com", "15883333333");
         ObjectMapper objectMapper = new ObjectMapper();
         String userJson = objectMapper.writeValueAsString(user);
