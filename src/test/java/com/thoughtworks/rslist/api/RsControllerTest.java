@@ -10,11 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.springframework.http.MediaType;
 
 import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -70,6 +70,7 @@ class RsControllerTest {
         String requestJson = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(requestJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(header().string("index", String.valueOf(RsController.rsList.size() - 1)))
                 .andExpect(status().isCreated());
 
         mockMvc.perform(get("/rs/list"))

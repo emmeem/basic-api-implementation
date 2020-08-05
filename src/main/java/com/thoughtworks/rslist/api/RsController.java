@@ -2,6 +2,7 @@ package com.thoughtworks.rslist.api;
 
 
 import com.thoughtworks.rslist.domain.User;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,9 +17,9 @@ import java.util.List;
 
 @RestController
 public class RsController {
-  private List<RsEvent> rsList = initRsEventList();
+  public static List<RsEvent> rsList = initRsEventList();
 
-  private List<RsEvent> initRsEventList() {
+  public static List<RsEvent> initRsEventList() {
     List<RsEvent> rsEvents = new ArrayList<>();
     rsEvents.add(new RsEvent("第一条事件", "无分类", new User("Userl","male",22,"lliao@a.com","16888888888")));
     rsEvents.add(new RsEvent("第二条事件", "无分类", new User("Userj","male",23,"jliao@a.com","15888888888")));
@@ -53,7 +54,9 @@ public class RsController {
     if(!UserController.users.contains(rsEvent.getUser())) {
       UserController.register(rsEvent.getUser());
     }
-    return ResponseEntity.created(null).build();
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("index", String.valueOf(rsList.indexOf(rsEvent)));
+    return new ResponseEntity(headers, HttpStatus.CREATED);
   }
 
   @PutMapping("/rs/{index}")
