@@ -2,10 +2,7 @@ package com.thoughtworks.rslist.domain;
 
 import lombok.Data;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Data
 public class User {
@@ -23,6 +20,7 @@ public class User {
     @Size(max = 8)
     private String name;
 
+    
     private String gender;
 
     @Min(18)
@@ -32,5 +30,6 @@ public class User {
     @Email
     private String email;
 
+    @Pattern(regexp = "1\\d{10}")
     private String phone;
 }
