@@ -1,6 +1,7 @@
 package com.thoughtworks.rslist.api;
 
 
+import com.thoughtworks.rslist.domain.User;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -17,9 +18,9 @@ public class RsController {
 
   private List<RsEvent> initRsEventList() {
     List<RsEvent> rsEvents = new ArrayList<>();
-    rsEvents.add(new RsEvent("第一条事件", "无分类"));
-    rsEvents.add(new RsEvent("第二条事件", "无分类"));
-    rsEvents.add(new RsEvent("第三条事件", "无分类"));
+    rsEvents.add(new RsEvent("第一条事件", "无分类", new User("Userl","male",22,"lliao@a.com","16888888888")));
+    rsEvents.add(new RsEvent("第二条事件", "无分类", new User("Userj","male",23,"jliao@a.com","15888888888")));
+    rsEvents.add(new RsEvent("第三条事件", "无分类", new User("Userb","male",21,"bliao@a.com","14888888888")));
 
     return rsEvents;
   }
@@ -46,6 +47,9 @@ public class RsController {
   @PostMapping("/rs/event")
   public void addOneRsEvent(@RequestBody RsEvent rsEvent) {
     rsList.add(rsEvent);
+    if(!UserController.users.contains(rsEvent.getUser())) {
+      UserController.register(rsEvent.getUser());
+    }
   }
 
   @PutMapping("/rs/{index}")
