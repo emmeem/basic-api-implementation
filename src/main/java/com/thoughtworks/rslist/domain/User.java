@@ -18,6 +18,7 @@ public class User {
         this.phone = phone;
     }
     @Size(max = 8)
+    @NotEmpty
     private String name;
 
     @NotEmpty
