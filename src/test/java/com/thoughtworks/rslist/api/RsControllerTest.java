@@ -18,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.hamcrest.Matchers.*;
 @SpringBootTest
 @AutoConfigureMockMvc
 class RsControllerTest {
@@ -34,6 +35,7 @@ class RsControllerTest {
         mockMvc.perform(get("/rs/1"))
                 .andExpect(jsonPath("$.eventName",is("第一条事件")))
                 .andExpect(jsonPath("$.keyWord",is("无分类")))
+                .andExpect(jsonPath("$",not(hasKey("user"))))
                 .andExpect(status().isOk());
     }
 
