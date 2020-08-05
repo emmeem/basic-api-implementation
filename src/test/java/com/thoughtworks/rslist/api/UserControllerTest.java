@@ -49,4 +49,14 @@ public class UserControllerTest {
                 .andExpect(status().isBadRequest());
         assertEquals(0,UserController.users.size());
     }
+
+    @Test
+    void emailshouldCorrect() throws Exception {
+        User user = new User( "emailliao", "male", 19, "emailliao", "16883333333");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String userJson = objectMapper.writeValueAsString(user);
+        mockMvc.perform(post("/user").content(userJson)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 }
