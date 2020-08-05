@@ -29,14 +29,17 @@ class RsListApplicationTests {
     @Autowired
     MockMvc mockMvc;
 
-    @Autowired
-    RsController rsController;
     /*
     @BeforeEach
     public void init(){
         mockMvc = MockMvcBuilders.standaloneSetup(new RsController()).bulid();
     }
     */
+    @Test
+    public void get_event_list() throws Exception {
+        mockMvc.perform(get("/rs/lists"));
+    }
+    
     @Test
     void shouldGetOneRsEvent() throws Exception {
         mockMvc.perform(get("/rs/1"))
@@ -107,10 +110,6 @@ class RsListApplicationTests {
                 .andExpect(jsonPath("$.keyWord",is("无分类")));
     }
 
-    @Test
-    public void get_event_list() throws Exception {
-        mockMvc.perform(get("/rs/lists"));
-	}
     @Test
     void shouldDeleteEvent() throws Exception {
         mockMvc.perform(delete("/rs/1"))

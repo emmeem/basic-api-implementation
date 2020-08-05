@@ -14,16 +14,6 @@ import java.util.List;
 @RestController
 public class RsController {
   private List<RsEvent> rsList = initRsEventList();
-  
-  @GetMapping("/rs/lists")
-  public List<RsEvent> getLists() {
-    return rsList;
-  }
-
-  @GetMapping("/rs/{index}")
-  public RsEvent getOneRsEvent(@PathVariable int index) {
-    return rsList.get(index - 1);
-  }
 
   private List<RsEvent> initRsEventList() {
     List<RsEvent> rsEvents = new ArrayList<>();
@@ -32,6 +22,16 @@ public class RsController {
     rsEvents.add(new RsEvent("第三条事件", "无分类"));
 
     return rsEvents;
+  }
+
+  @GetMapping("/rs/lists")
+  public List<RsEvent> getLists() {
+    return rsList;
+  }
+
+  @GetMapping("/rs/{index}")
+  public RsEvent getOneRsEvent(@PathVariable int index) {
+    return rsList.get(index - 1);
   }
 
   @GetMapping("/rs/list")
