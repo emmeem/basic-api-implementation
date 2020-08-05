@@ -29,26 +29,26 @@ public class RsController {
   }
 
   @GetMapping("/rs/lists")
-  public List<RsEvent> getLists() {
-    return rsList;
+  public ResponseEntity<List<RsEvent>> getLists() {
+
+    return ResponseEntity.ok(rsList);
   }
 
   @GetMapping("/rs/{index}")
-  public RsEvent getOneRsEvent(@PathVariable int index) {
-    return rsList.get(index - 1);
+  public  ResponseEntity<RsEvent> getOneRsEvent(@PathVariable int index) {
+    return ResponseEntity.ok((rsList.get(index - 1)));
   }
 
   @GetMapping("/rs/list")
-  public List<RsEvent> getRsEventRange(@RequestParam(required = false) Integer start,
+  public ResponseEntity<List<RsEvent>> getRsEventRange(@RequestParam(required = false) Integer start,
                                        @RequestParam(required = false) Integer end){
     if(start == null || end == null){
-      return rsList;
+      return ResponseEntity.ok(rsList);
     }
-    return rsList.subList(start-1, end);
+    return ResponseEntity.ok(rsList.subList(start-1, end));
   }
 
   @PostMapping("/rs/event")
-
   public ResponseEntity addOneRsEvent(@RequestBody RsEvent rsEvent) {
     rsList.add(rsEvent);
     if(!UserController.users.contains(rsEvent.getUser())) {
@@ -70,6 +70,6 @@ public class RsController {
 
   @DeleteMapping("/rs/{index}")
   public void deleteRsEvent(@PathVariable int index){
-      rsList.remove(index-1);
+    rsList.remove(index-1);
   }
 }
