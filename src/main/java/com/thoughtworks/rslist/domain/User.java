@@ -20,7 +20,7 @@ public class User {
     @Size(max = 8)
     private String name;
 
-    
+    @NotNull
     private String gender;
 
     @Min(18)
