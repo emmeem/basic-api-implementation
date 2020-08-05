@@ -11,7 +11,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
+import static org.hamcrest.Matchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -99,4 +103,18 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+    @Test
+    void shouldGetAllUsers() throws Exception {
+        User user = new User("liao", "male", 25, "liao@a.com", "12345678910");
+        UserController.register(user);
+        mockMvc.perform(get("/user/getAll"))
+                .andExpect(jsonPath("$[0].name",is("liao")))
+                .andExpect(jsonPath("$[0].gender",is("male")))
+                .andExpect(jsonPath("$[0].age",is(25)))
+                .andExpect(jsonPath("$[0].email",is("liao@a.com")))
+                .andExpect(jsonPath("$[0].phone",is("12345678910")))
+                .andExpect(status().isOk());
+    }
+
+
 }
