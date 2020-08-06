@@ -6,10 +6,7 @@ import com.thoughtworks.rslist.repository.UserRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -18,7 +15,7 @@ import java.util.ArrayList;
 @RestController
 @Data
 public class UserController {
-
+    /*
     public static List<User> users =new ArrayList<>();
 
     @PostMapping("/user")
@@ -30,7 +27,7 @@ public class UserController {
     public static ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(users);
     }
-
+    */
 
     private  final UserRepository userRepository;
 
@@ -39,7 +36,6 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    /*
     @PostMapping("/user")
     public void register(@RequestBody @Valid User user) {
         UserEntity entity = UserEntity.builder()
@@ -48,11 +44,19 @@ public class UserController {
                 .age(user.getAge())
                 .email(user.getEmail())
                 .phone(user.getPhone())
-                .voteNum(user.getVotenum())
+                .voteNum(user.getVoteNum())
                 .build();
 
         userRepository.save(entity);
     }
 
-     */
+    @DeleteMapping("/user/{index}")
+    public void deleteUser(@PathVariable Integer index) {
+        userRepository.deleteById(index);
+    }
+
+    @GetMapping("/user/getAll")
+    public List<UserEntity> getAllUsers() {
+        return userRepository.findAll();
+    }
 }
