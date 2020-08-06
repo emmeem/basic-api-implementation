@@ -21,9 +21,9 @@ public class RsController {
 
   public static List<RsEvent> initRsEventList() {
     List<RsEvent> rsEvents = new ArrayList<>();
-    rsEvents.add(new RsEvent("第一条事件", "无分类", new User("Userl","male",22,"lliao@a.com","16888888888")));
-    rsEvents.add(new RsEvent("第二条事件", "无分类", new User("Userj","male",23,"jliao@a.com","15888888888")));
-    rsEvents.add(new RsEvent("第三条事件", "无分类", new User("Userb","male",21,"bliao@a.com","14888888888")));
+    rsEvents.add(new RsEvent("第一条事件", "无分类", new User("Userl","male",22,"lliao@a.com","16888888888",10)));
+    rsEvents.add(new RsEvent("第二条事件", "无分类", new User("Userj","male",23,"jliao@a.com","15888888888",10)));
+    rsEvents.add(new RsEvent("第三条事件", "无分类", new User("Userb","male",21,"bliao@a.com","14888888888",10)));
 
     return rsEvents;
   }
@@ -47,7 +47,7 @@ public class RsController {
     }
     return ResponseEntity.ok(rsList.subList(start-1, end));
   }
-
+  /*
   @PostMapping("/rs/event")
   public ResponseEntity addOneRsEvent(@RequestBody RsEvent rsEvent) {
     rsList.add(rsEvent);
@@ -58,7 +58,7 @@ public class RsController {
     headers.set("index", String.valueOf(rsList.indexOf(rsEvent)));
     return new ResponseEntity(headers, HttpStatus.CREATED);
   }
-
+  */
   @PutMapping("/rs/{index}")
   public void changeOneRsEvent(@PathVariable int index, @RequestBody RsEvent newrsEvent){
     RsEvent rsEvent = rsList.get(index-1);

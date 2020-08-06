@@ -10,12 +10,13 @@ public class User {
     public User() {
 
     }
-    public User(String name,String gender,int age, String email,String phone) {
+    public User(String name,String gender,int age, String email,String phone, int voteNum) {
         this.name = name;
         this.gender = gender;
         this.age = age;
         this.email = email;
         this.phone = phone;
+        this.voteNum = voteNum;
     }
     @Size(max = 8)
     @NotEmpty
@@ -34,4 +35,6 @@ public class User {
     @Pattern(regexp = "1\\d{10}")
     @NotEmpty
     private String phone;
+
+    private int voteNum;
 }
