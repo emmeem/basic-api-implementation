@@ -66,7 +66,7 @@ class RsControllerTest {
 
     @Test
     void shouldAddOneRsEvent() throws Exception {
-        RsEvent rsEvent = new RsEvent("第四条事件", "无分类",new User("Userliao","male",25,"uliao@a.com","18888888888"));
+        RsEvent rsEvent = new RsEvent("第四条事件", "无分类",new User("Userliao","male",25,"uliao@a.com","18888888888",10));
 
         ObjectMapper objectMapper = new ObjectMapper();
         String requestJson = objectMapper.writeValueAsString(rsEvent);
@@ -89,7 +89,7 @@ class RsControllerTest {
 
     @Test
     void shouldChangeRsEvent() throws Exception {
-        RsEvent rsEvent = new RsEvent("修改第一个事件", "无分类",new User("Userbin","male",25,"ubin@a.com","17888888888"));
+        RsEvent rsEvent = new RsEvent("修改第一个事件", "无分类",new User("Userbin","male",25,"ubin@a.com","17888888888",10));
 
         ObjectMapper objectMapper = new ObjectMapper();
         String requestJson = objectMapper.writeValueAsString(rsEvent);

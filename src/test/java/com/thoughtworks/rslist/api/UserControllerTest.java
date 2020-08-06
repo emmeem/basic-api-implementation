@@ -25,7 +25,7 @@ public class UserControllerTest {
 
     @Test
     void shouldRegisterUser() throws Exception {
-        User user = new User("liao", "male", 25, "liao@a.com", "12345678910");
+        User user = new User("liao", "male", 25, "liao@a.com", "12345678910",10);
         ObjectMapper objectMapper = new ObjectMapper();
         String userJson = objectMapper.writeValueAsString(user);
         mockMvc.perform(post("/user").content(userJson)
@@ -35,7 +35,7 @@ public class UserControllerTest {
 
     @Test
     void nameshouldNotLongThan8() throws Exception {
-        User user = new User("eightliao", "male", 12, "eightliao@a.com", "18883333333");
+        User user = new User("eightliao", "male", 12, "eightliao@a.com", "18883333333",10);
         ObjectMapper objectMapper = new ObjectMapper();
         String userJson = objectMapper.writeValueAsString(user);
         mockMvc.perform(post("/user").content(userJson)
@@ -45,7 +45,7 @@ public class UserControllerTest {
 
     @Test
     void ageshouldBetween18and100() throws Exception {
-        User user = new User("ageliao", "male", 109, "ageliao@a.com", "17883333333");
+        User user = new User("ageliao", "male", 109, "ageliao@a.com", "17883333333",10);
         ObjectMapper objectMapper = new ObjectMapper();
         String userJson = objectMapper.writeValueAsString(user);
         mockMvc.perform(post("/user").content(userJson)
@@ -56,7 +56,7 @@ public class UserControllerTest {
 
     @Test
     void emailshouldCorrect() throws Exception {
-        User user = new User("emailliao", "male", 19, "emailliao", "16883333333");
+        User user = new User("emailliao", "male", 19, "emailliao", "16883333333",10);
         ObjectMapper objectMapper = new ObjectMapper();
         String userJson = objectMapper.writeValueAsString(user);
         mockMvc.perform(post("/user").content(userJson)
@@ -66,7 +66,7 @@ public class UserControllerTest {
 
     @Test
     void phonenumbershouldCorrect() throws Exception {
-        User user = new User("pnliao", "male", 19, "pnliao@a.com", "26883333333");
+        User user = new User("pnliao", "male", 19, "pnliao@a.com", "26883333333",10);
         ObjectMapper objectMapper = new ObjectMapper();
         String userJson = objectMapper.writeValueAsString(user);
         mockMvc.perform(post("/user").content(userJson)
@@ -76,7 +76,7 @@ public class UserControllerTest {
 
     @Test
     void gendershouldNotEmpty() throws Exception {
-        User user = new User("genderliao", "", 19, "gdliao@a.com", "15883333333");
+        User user = new User("genderliao", "", 19, "gdliao@a.com", "15883333333",10);
         ObjectMapper objectMapper = new ObjectMapper();
         String userJson = objectMapper.writeValueAsString(user);
         mockMvc.perform(post("/user").content(userJson)
@@ -86,7 +86,7 @@ public class UserControllerTest {
 
     @Test
     void nameshouldNotEmpty() throws Exception {
-        User user = new User("", "male", 19, "neliao@a.com", "14883333333");
+        User user = new User("", "male", 19, "neliao@a.com", "14883333333",10);
         ObjectMapper objectMapper = new ObjectMapper();
         String userJson = objectMapper.writeValueAsString(user);
         mockMvc.perform(post("/user").content(userJson)
@@ -96,16 +96,17 @@ public class UserControllerTest {
 
     @Test
     void phonenumbershouldNotEmpty() throws Exception {
-        User user = new User("anliao", "male", 19,"anliao@a.com", "");
+        User user = new User("anliao", "male", 19,"anliao@a.com", "",10);
         ObjectMapper objectMapper = new ObjectMapper();
         String userJson = objectMapper.writeValueAsString(user);
         mockMvc.perform(post("/user").content(userJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
     @Test
     void shouldGetAllUsers() throws Exception {
-        User user = new User("liao", "male", 25, "liao@a.com", "12345678910");
+        User user = new User("liao", "male", 25, "liao@a.com", "12345678910",10);
         UserController.register(user);
         mockMvc.perform(get("/user/getAll"))
                 .andExpect(jsonPath("$[0].name",is("liao")))
@@ -113,6 +114,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$[0].age",is(25)))
                 .andExpect(jsonPath("$[0].email",is("liao@a.com")))
                 .andExpect(jsonPath("$[0].phone",is("12345678910")))
+                .andExpect(jsonPath("$[0].voteNum",is(10)))
                 .andExpect(status().isOk());
     }
 
