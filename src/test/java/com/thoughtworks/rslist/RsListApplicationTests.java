@@ -48,6 +48,20 @@ class RsListApplicationTests {
     }
 
     @Test
+    void shouldgetAllUser() throws Exception {
+        User user = new User("name 0","male",19,"test@a.com","18888888888",10);
+        String request = objectMapper.writeValueAsString(user);
+        mockMvc.perform(post("/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request))
+                .andExpect(status().isOk());
+
+        List<UserEntity> users = userRepository.findAll();
+        assertEquals(1, users.size());
+        assertEquals("name 0", users.get(0).getUsername());
+    }
+
+    @Test
     void shoulAddRsEventWhenUserExits() {
 
     }
