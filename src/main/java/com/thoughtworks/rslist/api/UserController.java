@@ -54,4 +54,9 @@ public class UserController {
     public void deleteUser(@PathVariable Integer index) {
         userRepository.deleteById(index);
     }
+
+    @GetMapping("/user/getAll")
+    public List<UserEntity> getAllUsers() {
+        return userRepository.findAll();
+    }
 }

@@ -58,14 +58,25 @@ public class UserControllerTest {
         assertEquals(1, users.size());
         assertEquals("name 0", users.get(0).getUsername());
     }
+    @Test
+    void shouldGetAllUsers() throws Exception {
+        mockMvc.perform(get("/user/getAll"))
+                .andExpect(jsonPath("$[0].username", is("liao")))
+                .andExpect(jsonPath("$[0].gender", is("male")))
+                .andExpect(jsonPath("$[0].age", is(25)))
+                .andExpect(jsonPath("$[0].email", is("liao@a.com")))
+                .andExpect(jsonPath("$[0].phone", is("17777777777")))
+                .andExpect(jsonPath("$[0].voteNum", is(10)))
+                .andExpect(status().isOk());
+    }
 
     @Test
     void shouldDeleteUser() throws Exception {
-
         mockMvc.perform(delete("/user/1"))
                 .andExpect(status().isOk());
 
-        
+        mockMvc.perform(get("/user/getAll"))
+                .andExpect(jsonPath("$.*", hasSize(0)));
     }
     /*
     @Test
