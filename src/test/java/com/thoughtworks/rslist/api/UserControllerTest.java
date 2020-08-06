@@ -2,7 +2,9 @@ package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.entity.UserEntity;
+import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,22 +29,15 @@ public class UserControllerTest {
     ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     MockMvc mockMvc;
-
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    RsEventRepository rsEventRepository;
+
 
     @BeforeEach
     void setUp() {
         userRepository.deleteAll();
-        UserEntity userEntity = UserEntity.builder()
-                .username("liao")
-                .gender("male")
-                .age(25)
-                .email("liao@a.com")
-                .phone("17777777777")
-                .voteNum(10)
-                .build();
-        userRepository.save(userEntity);
     }
 
     @Test
@@ -72,12 +67,50 @@ public class UserControllerTest {
 
     @Test
     void shouldDeleteUser() throws Exception {
-        mockMvc.perform(delete("/user/1"))
+        UserEntity userEntity = UserEntity.builder()
+                .username("liao")
+                .gender("male")
+                .age(25)
+                .email("liao@a.com")
+                .phone("17777777777")
+                .voteNum(10)
+                .build();
+        userRepository.save(userEntity);
+        String userId = String.valueOf(userEntity.getId());
+        mockMvc.perform(delete("/user/"+ userId))
                 .andExpect(status().isOk());
 
         mockMvc.perform(get("/user/getAll"))
                 .andExpect(jsonPath("$.*", hasSize(0)));
     }
+
+    @Test
+    void shouldDeleteAllEventWhenDeleteUser() throws Exception {
+        UserEntity userEntity = UserEntity.builder()
+                .username("liao")
+                .gender("male")
+                .age(25)
+                .email("liao@a.com")
+                .phone("17777777777")
+                .voteNum(10)
+                .build();
+        userRepository.save(userEntity);
+        String userId = String.valueOf(userEntity.getId());
+
+        RsEventEntity eventEntity = RsEventEntity.builder()
+                .eventName("name 0")
+                .keyWord("无分类")
+                .userId(String.valueOf(userId))
+                .build();
+        rsEventRepository.save(eventEntity);
+
+        mockMvc.perform(delete("/user/"+userId))
+                .andExpect(status().isOk());
+
+        List<RsEventEntity> events = rsEventRepository.findAll();
+        assertEquals(0,events.size());
+    }
+
     /*
     @Test
     void nameshouldNotLongThan8() throws Exception {
