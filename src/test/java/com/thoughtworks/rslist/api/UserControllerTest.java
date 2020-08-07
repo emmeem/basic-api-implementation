@@ -38,6 +38,7 @@ public class UserControllerTest {
     @BeforeEach
     void setUp() {
         userRepository.deleteAll();
+
     }
 
     @Test
@@ -76,7 +77,16 @@ public class UserControllerTest {
                 .voteNum(10)
                 .build();
         userRepository.save(userEntity);
-        String userId = String.valueOf(userEntity.getId());
+        UserEntity userEntity2 = UserEntity.builder()
+                .username("liao")
+                .gender("male")
+                .age(25)
+                .email("liao@a.com")
+                .phone("17777777777")
+                .voteNum(10)
+                .build();
+        userRepository.save(userEntity2);
+        String userId = String.valueOf(userEntity2.getId());
         mockMvc.perform(delete("/user/"+ userId))
                 .andExpect(status().isOk());
 
