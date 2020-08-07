@@ -77,16 +77,8 @@ public class UserControllerTest {
                 .voteNum(10)
                 .build();
         userRepository.save(userEntity);
-        UserEntity userEntity2 = UserEntity.builder()
-                .username("liao")
-                .gender("male")
-                .age(25)
-                .email("liao@a.com")
-                .phone("17777777777")
-                .voteNum(10)
-                .build();
-        userRepository.save(userEntity2);
-        String userId = String.valueOf(userEntity2.getId());
+
+        String userId = String.valueOf(userEntity.getId());
         mockMvc.perform(delete("/user/"+ userId))
                 .andExpect(status().isOk());
 
