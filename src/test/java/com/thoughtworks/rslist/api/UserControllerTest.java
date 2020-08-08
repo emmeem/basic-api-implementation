@@ -108,11 +108,11 @@ public class UserControllerTest {
         User user = new User("liao", "male", 25, "liao@a.com", "12345678910");
         UserController.register(user);
         mockMvc.perform(get("/user/getAll"))
-                .andExpect(jsonPath("$[0].name",is("liao")))
-                .andExpect(jsonPath("$[0].gender",is("male")))
-                .andExpect(jsonPath("$[0].age",is(25)))
-                .andExpect(jsonPath("$[0].email",is("liao@a.com")))
-                .andExpect(jsonPath("$[0].phone",is("12345678910")))
+                .andExpect(jsonPath("$[0].user_name",is("liao")))
+                .andExpect(jsonPath("$[0].user_gender",is("male")))
+                .andExpect(jsonPath("$[0].user_age",is(25)))
+                .andExpect(jsonPath("$[0].user_email",is("liao@a.com")))
+                .andExpect(jsonPath("$[0].user_phone",is("12345678910")))
                 .andExpect(status().isOk());
     }
 
