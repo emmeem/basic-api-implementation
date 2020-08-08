@@ -73,7 +73,8 @@ class RsControllerTest {
     @Test
     @Order(4)
     void shouldAddOneRsEvent() throws Exception {
-        RsEvent rsEvent = new RsEvent("第四条事件", "无分类",new User("Userliao","male",25,"uliao@a.com","18888888888"));
+        RsEvent rsEvent = new RsEvent("第四条事件", "无分类",
+                new User("Userliao","male",25,"uliao@a.com","18888888888"));
 
         ObjectMapper objectMapper = new ObjectMapper();
         String requestJson = objectMapper.writeValueAsString(rsEvent);
