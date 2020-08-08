@@ -1,10 +1,10 @@
 package com.thoughtworks.rslist.api;
 
 
-import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.exception.InvalidIndexException;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import com.thoughtworks.rslist.repository.RsEventRepository;
+import com.thoughtworks.rslist.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,11 +13,13 @@ import com.thoughtworks.rslist.domain.RsEvent;
 
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class RsController {
+  /*
   public static List<RsEvent> rsList = initRsEventList();
 
   public static List<RsEvent> initRsEventList() {
@@ -27,6 +29,20 @@ public class RsController {
     rsEvents.add(new RsEvent("第三条事件", "无分类", new User("Userb","male",21,"bliao@a.com","14888888888",10)));
 
     return rsEvents;
+  }
+  */
+  private List<RsEvent> rsList = createInitialList();
+  private final RsEventRepository rsEventRepository;
+  private final UserRepository userRepository;
+
+  public RsController(RsEventRepository rsEventRepository, UserRepository userRepository) {
+    this.rsEventRepository = rsEventRepository;
+    this.userRepository = userRepository;
+  }
+
+  private static List<RsEvent> createInitialList() {
+    List<RsEvent> initList = new ArrayList<>();
+    return initList;
   }
 
   @GetMapping("/rs/lists")
@@ -63,6 +79,22 @@ public class RsController {
     return new ResponseEntity(headers, HttpStatus.CREATED);
   }
   */
+  @PostMapping("/rs/event")
+  public ResponseEntity rsEventRepository(@RequestBody @Valid RsEvent rsEvent) {
+    Integer userId = Integer.valueOf(rsEvent.getUserId());
+    if (!userRepository.existsById(Integer.valueOf(rsEvent.getUserId()))) {
+      return ResponseEntity.badRequest().build();
+    }
+
+    RsEventEntity event = RsEventEntity.builder()
+            .eventName(rsEvent.getEventName())
+            .keyWord(rsEvent.getKeyWord())
+            .userId(String.valueOf(userId))
+            .build();
+    rsEventRepository.save(event);
+    return ResponseEntity.created(null).build();
+  }
+
   @PutMapping("/rs/{index}")
   public void changeOneRsEvent(@PathVariable int index, @RequestBody RsEvent newrsEvent){
     RsEvent rsEvent = rsList.get(index-1);
