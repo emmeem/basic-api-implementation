@@ -39,16 +39,20 @@ public class RsController {
   }
 
   @PutMapping("/rs/{index}")
-  public void changeOneRsEvent(@PathVariable int index, @RequestBody RsEvent newrsEvent){
+  public void changeOneRsEvent(@PathVariable int index,
+                               @RequestBody RsEvent newrsEvent) {
     RsEvent rsEvent = rsList.get(index-1);
-    if(newrsEvent.getEventName() !=null && newrsEvent.getKeyWord() != null){
-        rsEvent.setEventName(newrsEvent.getEventName());
-        rsEvent.setKeyWord(newrsEvent.getKeyWord());
+    if(newrsEvent.getEventName() !=null ){
+      rsEvent.setEventName(newrsEvent.getEventName());
+
+    }
+    if(newrsEvent.getKeyWord() != null) {
+      rsEvent.setKeyWord(newrsEvent.getKeyWord());
     }
   }
 
   @DeleteMapping("/rs/{index}")
-  public void deleteRsEvent(@PathVariable int index){
-      rsList.remove(index-1);
+  public void deleteRsEvent(@PathVariable("index") int index) {
+    rsList.remove(index-1);
   }
 }
