@@ -18,6 +18,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @SpringBootTest
@@ -29,14 +31,14 @@ public class VoteControllerTest {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    RsEventRepository rsRepository;
+    RsEventRepository rsEventRepository;
     @Autowired
     VoteRepository voteRepository;
 
     @BeforeEach
     public void init() {
         voteRepository.deleteAll();
-        rsRepository.deleteAll();
+        rsEventRepository.deleteAll();
         userRepository.deleteAll();
     }
 
@@ -56,7 +58,7 @@ public class VoteControllerTest {
                 .keyWord("key")
                 .userId(String.valueOf(user.getId()))
                 .build();
-        event = rsRepository.save(event);
+        event = rsEventRepository.save(event);
         VoteEntity vote0 = VoteEntity.builder()
                 .localDateTime(LocalDateTime.now())
                 .num(0)
@@ -114,5 +116,44 @@ public class VoteControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @Test
+    void shouldGetVoteBetweenTime() throws Exception {
+        LocalDateTime start = LocalDateTime.now();
+        UserEntity user = UserEntity.builder()
+                .username("user 0")
+                .gender("male")
+                .age(20)
+                .email("12@34.com")
+                .phone("13579246810")
+                .voteNum(3)
+                .build();
+        user = userRepository.save(user);
+        RsEventEntity event = RsEventEntity.builder()
+                .eventName("event 0")
+                .keyWord("key")
+                .userId(String.valueOf(user.getId()))
+                .build();
+        event = rsEventRepository.save(event);
+        VoteEntity vote = VoteEntity.builder()
+                .num(2)
+                .localDateTime(LocalDateTime.now())
+                .rsEvent(event)
+                .user(user)
+                .build();
+        voteRepository.save(vote);
+        VoteEntity vote2 = VoteEntity.builder()
+                .num(3)
+                .localDateTime(LocalDateTime.now())
+                .rsEvent(event)
+                .user(user)
+                .build();
+        voteRepository.save(vote2);
+
+        LocalDateTime end = LocalDateTime.now();
+        mockMvc.perform(get("/rs/vote?start=" + start + "&end=" + end))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(status().isOk());
     }
 }

@@ -5,15 +5,18 @@ import com.thoughtworks.rslist.entity.VoteEntity;
 import com.thoughtworks.rslist.repository.VoteRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 public class VoteController {
+
     private final VoteRepository voteRepository;
 
     public VoteController(VoteRepository voteRepository) {
@@ -36,5 +39,12 @@ public class VoteController {
                 .time(vote.getLocalDateTime())
                 .voteNum(vote.getNum())
                 .build()).collect(Collectors.toList());
+    }
+
+    @GetMapping("/rs/vote")
+    public ResponseEntity<List<VoteEntity>> getVoteBetweenTime(@RequestParam LocalDateTime start, @RequestParam LocalDateTime end){
+        List<VoteEntity> votes = voteRepository.findByTimestampBetween(start, end);
+
+        return ResponseEntity.ok(votes);
     }
 }
