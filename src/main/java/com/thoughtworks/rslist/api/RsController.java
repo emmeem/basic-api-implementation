@@ -30,12 +30,14 @@ public class RsController {
 
   @GetMapping("/rs/lists")
   public ResponseEntity<List<RsEvent>> getLists() {
-
     return ResponseEntity.ok(rsList);
   }
 
   @GetMapping("/rs/{index}")
-  public  ResponseEntity<RsEvent> getOneRsEvent(@PathVariable int index) {
+  public ResponseEntity<RsEvent> getOneRsEvent(@PathVariable int index) {
+    if(index > rsList.size()) {
+      return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
     return ResponseEntity.ok((rsList.get(index - 1)));
   }
 
