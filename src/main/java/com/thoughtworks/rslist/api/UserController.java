@@ -18,20 +18,6 @@ import java.util.List;
 @RestController
 @Data
 public class UserController {
-    /*
-    public static List<User> users =new ArrayList<>();
-
-    @PostMapping("/user")
-    public static void register(@RequestBody @Valid User user) {
-        users.add(user);
-    }
-
-    @GetMapping("/user/getAll")
-    public static ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(users);
-    }
-    */
-
     private  final UserRepository userRepository;
     private  final RsEventRepository rsEventRepository;
 
@@ -64,6 +50,7 @@ public class UserController {
     @DeleteMapping("/user/{index}")
     public void deleteUser(@PathVariable Integer index) {
         userRepository.deleteById(index);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity exceptionHandler(MethodArgumentNotValidException ex) {

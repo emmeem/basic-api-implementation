@@ -1,6 +1,5 @@
 package com.thoughtworks.rslist.domain;
 
-<<<<<<< HEAD
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
