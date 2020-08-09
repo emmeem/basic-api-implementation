@@ -62,9 +62,23 @@ class RsControllerTest {
     }
     @Test
     void shouldGetBadRequestWhenStartAndEndOutOfBound() throws Exception {
-        mockMvc.perform(get("/rs/list?start=4&end=5"))
+        mockMvc.perform(get("/rs/list?start=-1&end=3"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error",is("invalid request param")));
+    }
+
+    @Test
+    void shouldReturnExpectionWhenAddOneRsEvent() throws Exception {
+        RsEvent rsEvent = new RsEvent("第四条事件", "无分类",
+                new User("Userliao","male",10,"uliao@a.com","18888888888"));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestJson = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(post("/rs/event").content(requestJson)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error",is("invalid param")));
     }
 
     @Test

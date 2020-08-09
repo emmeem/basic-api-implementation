@@ -12,6 +12,7 @@ import javax.validation.Valid;
 public class RsEvent {
     private String eventName;
     private String keyWord;
+    @Valid
     private User user;
 
     public String getEventName() {
@@ -30,7 +31,6 @@ public class RsEvent {
         this.keyWord = keyWord;
     }
 
-    @JsonIgnore
     public User getUser() {
         return user;
     }

@@ -7,6 +7,7 @@ import com.thoughtworks.rslist.exception.InvalidIndexException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -46,13 +47,13 @@ public class RsController {
 
   @GetMapping("/rs/list")
   public ResponseEntity getRsEventRange(@RequestParam(required = false) Integer start,
-                                       @RequestParam(required = false) Integer end){
+                                       @RequestParam(required = false) Integer end) throws InvalidIndexException {
     if(start == null || end == null){
       return ResponseEntity.ok(rsList);
     }
     if(start < 0 || start > rsList.size())
     {
-      return ResponseEntity.badRequest().body("{\"error\":\"invalid request param\"}");
+      throw new InvalidIndexException("invalid request param");
     }
     return ResponseEntity.ok(rsList.subList(start-1, end));
   }
@@ -82,9 +83,20 @@ public class RsController {
     rsList.remove(index-1);
   }
 
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity exceptionHandler(Exception ex) {
+
+    String errorMessage;
+    CommenError commentError =  new CommenError();
+    errorMessage = "invalid param";
+
+    commentError.setError(errorMessage);
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(commentError);
+  }
   @ExceptionHandler(InvalidIndexException.class)
   public ResponseEntity exceptionHandler(InvalidIndexException ex) {
     CommenError commentError =  new CommenError();
+
     commentError.setError(ex.getMessage());
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(commentError);
   }
