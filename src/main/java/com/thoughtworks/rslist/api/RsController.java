@@ -4,6 +4,8 @@ package com.thoughtworks.rslist.api;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.exception.CommenError;
 import com.thoughtworks.rslist.exception.InvalidIndexException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -83,21 +85,13 @@ public class RsController {
     rsList.remove(index-1);
   }
 
-  @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity exceptionHandler(Exception ex) {
 
-    String errorMessage;
-    CommenError commentError =  new CommenError();
-    errorMessage = "invalid param";
-
-    commentError.setError(errorMessage);
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(commentError);
-  }
   @ExceptionHandler(InvalidIndexException.class)
   public ResponseEntity exceptionHandler(InvalidIndexException ex) {
     CommenError commentError =  new CommenError();
 
     commentError.setError(ex.getMessage());
+
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(commentError);
   }
 }
