@@ -5,14 +5,15 @@ import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import com.thoughtworks.rslist.exception.CommenError;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.ArrayList;
 
 @RestController
 @Data
@@ -33,7 +34,6 @@ public class UserController {
 
     private  final UserRepository userRepository;
     private  final RsEventRepository rsEventRepository;
-
 
     public UserController(UserRepository userRepository,RsEventRepository rsEventRepository) {
 
@@ -64,5 +64,13 @@ public class UserController {
     @DeleteMapping("/user/{index}")
     public void deleteUser(@PathVariable Integer index) {
         userRepository.deleteById(index);
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity exceptionHandler(MethodArgumentNotValidException ex) {
+        CommenError commentError =  new CommenError();
+        String errorMessage = "invalid user";
+        commentError.setError(errorMessage);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(commentError);
+
     }
 }
