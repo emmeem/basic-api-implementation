@@ -1,39 +1,37 @@
 package com.thoughtworks.rslist.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class User {
-
-    public User() {
-
-    }
-    public User(String name,String gender,int age, String email,String phone, int voteNum) {
-        this.name = name;
-        this.gender = gender;
-        this.age = age;
-        this.email = email;
-        this.phone = phone;
-        this.voteNum = voteNum;
-    }
     @Size(max = 8)
     @NotEmpty
+    @JsonProperty(value = "user_name")
     private String name;
 
     @NotEmpty
+    @JsonProperty(value = "user_gender")
     private String gender;
 
     @Min(18)
     @Max(100)
+    @JsonProperty(value = "user_age")
     private int age;
 
     @Email
+    @JsonProperty(value = "user_email")
     private String email;
 
     @Pattern(regexp = "1\\d{10}")
     @NotEmpty
+    @JsonProperty(value = "user_phone")
     private String phone;
 
     private int voteNum;

@@ -2,9 +2,14 @@ package com.thoughtworks.rslist.api;
 
 
 import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.exception.CommenError;
+import com.thoughtworks.rslist.exception.InvalidIndexException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -12,6 +17,7 @@ import com.thoughtworks.rslist.domain.RsEvent;
 
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,33 +36,39 @@ public class RsController {
 
   @GetMapping("/rs/lists")
   public ResponseEntity<List<RsEvent>> getLists() {
-
     return ResponseEntity.ok(rsList);
   }
 
   @GetMapping("/rs/{index}")
-  public  ResponseEntity<RsEvent> getOneRsEvent(@PathVariable int index) {
+  public ResponseEntity getOneRsEvent(@PathVariable int index) throws InvalidIndexException {
+    if(index > rsList.size()) {
+      throw new InvalidIndexException("invalid index");
+    }
     return ResponseEntity.ok((rsList.get(index - 1)));
   }
 
   @GetMapping("/rs/list")
-  public ResponseEntity<List<RsEvent>> getRsEventRange(@RequestParam(required = false) Integer start,
-                                       @RequestParam(required = false) Integer end){
+  public ResponseEntity getRsEventRange(@RequestParam(required = false) Integer start,
+                                       @RequestParam(required = false) Integer end) throws InvalidIndexException {
     if(start == null || end == null){
       return ResponseEntity.ok(rsList);
+    }
+    if(start < 0 || start > rsList.size())
+    {
+      throw new InvalidIndexException("invalid request param");
     }
     return ResponseEntity.ok(rsList.subList(start-1, end));
   }
   /*
   @PostMapping("/rs/event")
-  public ResponseEntity addOneRsEvent(@RequestBody RsEvent rsEvent) {
+  public ResponseEntity addOneRsEvent(@RequestBody @Valid RsEvent rsEvent) {
     rsList.add(rsEvent);
     if(!UserController.users.contains(rsEvent.getUser())) {
       UserController.register(rsEvent.getUser());
     }
     HttpHeaders headers = new HttpHeaders();
     headers.set("index", String.valueOf(rsList.indexOf(rsEvent)));
-    return new ResponseEntity(headers, HttpStatus.CREATED);
+    return new ResponseEntity(headers,HttpStatus.CREATED);
   }
   */
   @PutMapping("/rs/{index}")
@@ -71,5 +83,15 @@ public class RsController {
   @DeleteMapping("/rs/{index}")
   public void deleteRsEvent(@PathVariable int index){
     rsList.remove(index-1);
+  }
+
+
+  @ExceptionHandler(InvalidIndexException.class)
+  public ResponseEntity exceptionHandler(InvalidIndexException ex) {
+    CommenError commentError =  new CommenError();
+
+    commentError.setError(ex.getMessage());
+
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(commentError);
   }
 }
