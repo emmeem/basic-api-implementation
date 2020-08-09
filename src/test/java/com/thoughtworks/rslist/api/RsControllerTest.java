@@ -9,11 +9,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import org.springframework.http.MediaType;
 
 import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,13 +35,15 @@ class RsControllerTest {
     @Test
     void shouldGetOneRsEvent() throws Exception {
         mockMvc.perform(get("/rs/1"))
+                .andDo(print())
                 .andExpect(jsonPath("$.eventName",is("第一条事件")))
                 .andExpect(jsonPath("$.keyWord",is("无分类")))
                 .andExpect(jsonPath("$",not(hasKey("user"))))
                 .andExpect(status().isOk());
-        
+
         mockMvc.perform(get("/rs/10"))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(header().string("error", "invalid index"));
     }
 
     @Test
@@ -60,17 +64,16 @@ class RsControllerTest {
                 .andExpect(jsonPath("$[2].eventName",is("第三条事件")))
                 .andExpect(jsonPath("$[2].keyWord",is("无分类")))
                 .andExpect(status().isOk());
-        mockMvc.perform(get("/rs/list?start=2&end=3"))
-                .andExpect(jsonPath("$[0].eventName",is("第二条事件")))
-                .andExpect(jsonPath("$[0].keyWord",is("无分类")))
-                .andExpect(jsonPath("$[1].eventName",is("第三条事件")))
-                .andExpect(jsonPath("$[1].keyWord",is("无分类")))
-                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/rs/list?start=2&end=5"))
+                .andExpect(status().isBadRequest())
+                .andExpect(header().string("error", "invalid request param"));
     }
 
     @Test
     void shouldAddOneRsEvent() throws Exception {
-        RsEvent rsEvent = new RsEvent("第四条事件", "无分类",new User("Userliao","male",25,"uliao@a.com","18888888888"));
+        RsEvent rsEvent = new RsEvent("第四条事件", "无分类",
+                new User("Userliao","male",25,"uliao@a.com","18888888888"));
 
         ObjectMapper objectMapper = new ObjectMapper();
         String requestJson = objectMapper.writeValueAsString(rsEvent);

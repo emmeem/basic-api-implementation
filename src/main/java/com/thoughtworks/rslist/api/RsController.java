@@ -12,6 +12,7 @@ import com.thoughtworks.rslist.domain.RsEvent;
 
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,9 @@ public class RsController {
   @GetMapping("/rs/{index}")
   public ResponseEntity<RsEvent> getOneRsEvent(@PathVariable int index) {
     if(index > rsList.size()) {
-      return new ResponseEntity(HttpStatus.BAD_REQUEST);
+      HttpHeaders headers = new HttpHeaders();
+      headers.set("error", "invalid index");
+      return new ResponseEntity(headers,HttpStatus.BAD_REQUEST);
     }
     return ResponseEntity.ok((rsList.get(index - 1)));
   }
@@ -47,18 +50,24 @@ public class RsController {
     if(start == null || end == null){
       return ResponseEntity.ok(rsList);
     }
+    if(start <0 || end > rsList.size())
+    {
+      HttpHeaders headers = new HttpHeaders();
+      headers.set("error", "invalid request param");
+      return new ResponseEntity(headers,HttpStatus.BAD_REQUEST);
+    }
     return ResponseEntity.ok(rsList.subList(start-1, end));
   }
 
   @PostMapping("/rs/event")
-  public ResponseEntity addOneRsEvent(@RequestBody RsEvent rsEvent) {
+  public ResponseEntity addOneRsEvent(@RequestBody @Valid RsEvent rsEvent) {
     rsList.add(rsEvent);
     if(!UserController.users.contains(rsEvent.getUser())) {
       UserController.register(rsEvent.getUser());
     }
     HttpHeaders headers = new HttpHeaders();
     headers.set("index", String.valueOf(rsList.indexOf(rsEvent)));
-    return new ResponseEntity(headers, HttpStatus.CREATED);
+    return new ResponseEntity(headers,HttpStatus.CREATED);
   }
 
   @PutMapping("/rs/{index}")
