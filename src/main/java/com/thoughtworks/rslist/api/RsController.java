@@ -119,6 +119,11 @@ public class RsController {
     rsList.remove(index-1);
   }
 
+  @PostMapping("/rs/vote/{rsEventId}")
+  public void voteEvent(@PathVariable int index, @RequestBody RsEvent rsEvent) {
+
+  }
+
   @ExceptionHandler(InvalidIndexException.class)
   public ResponseEntity exceptionHandler(InvalidIndexException ex) {
     CommenError commentError =  new CommenError();

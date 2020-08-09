@@ -7,7 +7,9 @@ import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
+import com.thoughtworks.rslist.repository.VoteRepository;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 import static org.hamcrest.Matchers.*;
+import com.thoughtworks.rslist.domain.Vote;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -31,9 +34,12 @@ class RsControllerTest {
     UserRepository userRepository;
     @Autowired
     RsEventRepository rsEventRepository;
+    @Autowired
+    VoteRepository voteRepository;
 
-    @AfterEach
+    @BeforeEach
     void cleanup() {
+        voteRepository.deleteAll();
         rsEventRepository.deleteAll();
         userRepository.deleteAll();
     }
@@ -171,7 +177,39 @@ class RsControllerTest {
                 .andExpect(status().isOk());
     }
 
-    
+    @Test
+    void shouldGetVote() throws Exception {
+        UserEntity user = UserEntity.builder()
+                .username("liao")
+                .gender("male")
+                .age(25)
+                .email("liao@a.com")
+                .phone("18888888888")
+                .voteNum(10)
+                .build();
+        user = userRepository.save(user);
+        String userId = String.valueOf(user.getId());
+        RsEventEntity rsEventEntity = RsEventEntity.builder()
+                .eventName("更新热搜事件")
+                .keyWord("无分类")
+                .userId(userId)
+                .build();
+        rsEventEntity = rsEventRepository.save(rsEventEntity);
+        String rsEventId = String.valueOf(rsEventEntity.getId());
+        Vote vote = Vote.builder()
+                .voteNum(5)
+                .userId(Integer.parseInt(userId))
+                .build();
+        String requestJson = objectMapper.writeValueAsString(vote);
+        mockMvc.perform(post("/rs/vote/" + rsEventId)
+                .content(requestJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].voteNum", is(5)))
+                .andExpect(status().isOk());
+    }
 
 }
 
