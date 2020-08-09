@@ -67,18 +67,7 @@ public class RsController {
     }
     return ResponseEntity.ok(rsList.subList(start-1, end));
   }
-  /*
-  @PostMapping("/rs/event")
-  public ResponseEntity addOneRsEvent(@RequestBody RsEvent rsEvent) {
-    rsList.add(rsEvent);
-    if(!UserController.users.contains(rsEvent.getUser())) {
-      UserController.register(rsEvent.getUser());
-    }
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("index", String.valueOf(rsList.indexOf(rsEvent)));
-    return new ResponseEntity(headers, HttpStatus.CREATED);
-  }
-  */
+
   @PostMapping("/rs/event")
   public ResponseEntity rsEventRepository(@RequestBody @Valid RsEvent rsEvent) {
     Integer userId = Integer.valueOf(rsEvent.getUserId());
