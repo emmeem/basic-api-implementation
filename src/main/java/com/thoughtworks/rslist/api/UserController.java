@@ -1,29 +1,22 @@
 package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.User;
-<<<<<<< HEAD
 import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.repository.UserRepository;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-=======
 import com.thoughtworks.rslist.exception.CommenError;
-import com.thoughtworks.rslist.exception.InvalidIndexException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
->>>>>>> error-handling
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.ArrayList;
 
 @RestController
 @Data
 public class UserController {
-    private  final UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserController(UserRepository userRepository) {
 
@@ -52,6 +45,7 @@ public class UserController {
     @GetMapping("/user/getAll")
     public List<UserEntity> getAllUsers() {
         return userRepository.findAll();
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity exceptionHandler(MethodArgumentNotValidException ex) {

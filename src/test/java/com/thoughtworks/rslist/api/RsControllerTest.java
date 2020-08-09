@@ -66,11 +66,11 @@ class RsControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error",is("invalid request param")));
     }
-
+    /*
     @Test
     void shouldReturnExpectionWhenAddOneRsEvent() throws Exception {
         RsEvent rsEvent = new RsEvent("第四条事件", "无分类",
-                new User("Userliao","male",10,"uliao@a.com","18888888888"));
+                new User("Userliao","male",10,"uliao@a.com","18888888888",10));
 
         ObjectMapper objectMapper = new ObjectMapper();
         String requestJson = objectMapper.writeValueAsString(rsEvent);
@@ -80,11 +80,11 @@ class RsControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error",is("invalid param")));
     }
-
+    */
     @Test
     void shouldAddOneRsEvent() throws Exception {
         RsEvent rsEvent = new RsEvent("第四条事件", "无分类",
-                new User("Userliao","male",25,"uliao@a.com","18888888888"));
+                new User("Userliao","male",25,"uliao@a.com","18888888888",10));
 				
         ObjectMapper objectMapper = new ObjectMapper();
         String requestJson = objectMapper.writeValueAsString(rsEvent);
