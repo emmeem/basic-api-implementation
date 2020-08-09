@@ -35,26 +35,22 @@ public class RsController {
   }
 
   @GetMapping("/rs/{index}")
-  public ResponseEntity<RsEvent> getOneRsEvent(@PathVariable int index) {
+  public ResponseEntity getOneRsEvent(@PathVariable int index) {
     if(index > rsList.size()) {
-      HttpHeaders headers = new HttpHeaders();
-      headers.set("error", "invalid index");
-      return new ResponseEntity(headers,HttpStatus.BAD_REQUEST);
+      return ResponseEntity.badRequest().body("{\"error\":\"invalid index\"}");
     }
     return ResponseEntity.ok((rsList.get(index - 1)));
   }
 
   @GetMapping("/rs/list")
-  public ResponseEntity<List<RsEvent>> getRsEventRange(@RequestParam(required = false) Integer start,
+  public ResponseEntity getRsEventRange(@RequestParam(required = false) Integer start,
                                        @RequestParam(required = false) Integer end){
     if(start == null || end == null){
       return ResponseEntity.ok(rsList);
     }
-    if(start <0 || end > rsList.size())
+    if(start < 0 || start > rsList.size())
     {
-      HttpHeaders headers = new HttpHeaders();
-      headers.set("error", "invalid request param");
-      return new ResponseEntity(headers,HttpStatus.BAD_REQUEST);
+      return ResponseEntity.badRequest().body("{\"error\":\"invalid request param\"}");
     }
     return ResponseEntity.ok(rsList.subList(start-1, end));
   }

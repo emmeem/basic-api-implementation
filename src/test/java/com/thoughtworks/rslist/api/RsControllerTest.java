@@ -5,22 +5,15 @@ import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
-
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-
 import org.springframework.http.MediaType;
-
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import org.springframework.boot.test.context.SpringBootTest;
-
 import static org.hamcrest.Matchers.*;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 class RsControllerTest {
@@ -35,39 +28,43 @@ class RsControllerTest {
     @Test
     void shouldGetOneRsEvent() throws Exception {
         mockMvc.perform(get("/rs/1"))
-                .andDo(print())
                 .andExpect(jsonPath("$.eventName",is("第一条事件")))
                 .andExpect(jsonPath("$.keyWord",is("无分类")))
                 .andExpect(jsonPath("$",not(hasKey("user"))))
                 .andExpect(status().isOk());
+    }
 
+    @Test
+    void shouldReturnBadRequestWhenIndexOutOfBound() throws Exception {
         mockMvc.perform(get("/rs/10"))
                 .andExpect(status().isBadRequest())
-                .andExpect(header().string("error", "invalid index"));
+                .andExpect(jsonPath("$.error",is("invalid index")));
     }
 
     @Test
     void shouldGetRangeRsEvent() throws Exception {
         mockMvc.perform(get("/rs/list?start=1&end=2"))
-                .andExpect(jsonPath("$[0].eventName",is("第一条事件")))
-                .andExpect(jsonPath("$[0].keyWord",is("无分类")))
-                .andExpect(jsonPath("$",not(hasKey("user"))))
-                .andExpect(jsonPath("$[1].eventName",is("第二条事件")))
-                .andExpect(jsonPath("$[1].keyWord",is("无分类")))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无分类")))
+                .andExpect(jsonPath("$", not(hasKey("user"))))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyWord", is("无分类")))
                 .andExpect(status().isOk());
 
         mockMvc.perform(get("/rs/list?start=1&end=3"))
-                .andExpect(jsonPath("$[0].eventName",is("第一条事件")))
-                .andExpect(jsonPath("$[0].keyWord",is("无分类")))
-                .andExpect(jsonPath("$[1].eventName",is("第二条事件")))
-                .andExpect(jsonPath("$[1].keyWord",is("无分类")))
-                .andExpect(jsonPath("$[2].eventName",is("第三条事件")))
-                .andExpect(jsonPath("$[2].keyWord",is("无分类")))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无分类")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyWord", is("无分类")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyWord", is("无分类")))
                 .andExpect(status().isOk());
-
-        mockMvc.perform(get("/rs/list?start=2&end=5"))
+    }
+    @Test
+    void shouldGetBadRequestWhenStartAndEndOutOfBound() throws Exception {
+        mockMvc.perform(get("/rs/list?start=4&end=5"))
                 .andExpect(status().isBadRequest())
-                .andExpect(header().string("error", "invalid request param"));
+                .andExpect(jsonPath("$.error",is("invalid request param")));
     }
 
     @Test
